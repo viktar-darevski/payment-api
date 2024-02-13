@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix("v1")->group(function () {
-    Route::post('/auth/register', [AuthController::class, 'register']);
-    Route::post('/auth/login', [AuthController::class, 'login']);
-
-
+    Route::prefix('/payments')->group(function () {
+        Route::post('/transaction', [PaymentController::class, 'create']);
+    })->middleware('auth:api');
 });

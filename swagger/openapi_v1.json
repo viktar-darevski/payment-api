@@ -1,0 +1,178 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Payment Service API",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/payments/transaction": {
+            "post": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Create a new payment",
+                "operationId": "createPayment",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePaymentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreatePayment": {
+                "title": "Create Payment",
+                "description": "Class CreatePaymentDTO",
+                "required": [
+                    "uuid",
+                    "title",
+                    "currency",
+                    "items"
+                ],
+                "properties": {
+                    "uuid": {
+                        "description": "The UUID of the payment",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "title": {
+                        "description": "The title of the payment",
+                        "type": "string"
+                    },
+                    "currency": {
+                        "description": "The currency of the payment",
+                        "type": "string"
+                    },
+                    "provider": {
+                        "description": "The processing provider of the payment",
+                        "type": "string"
+                    },
+                    "callback_url": {
+                        "description": "The callback url",
+                        "type": "url"
+                    },
+                    "session_code": {
+                        "description": "The session code for the callback payment",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The items of the payment",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentItemDTO"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentItemDTO": {
+                "title": "Payment Item",
+                "required": [
+                    "name",
+                    "value"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the payment item",
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "The value of the payment item",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CreatePaymentRequest": {
+                "title": "Create Payment Request",
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "title": {
+                        "type": "string",
+                        "format": "currency"
+                    },
+                    "currency": {
+                        "type": "string"
+                    },
+                    "provider": {
+                        "type": "string",
+                        "enum": [
+                            "stripe",
+                            "pay-pall"
+                        ]
+                    },
+                    "callback_url": {
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "session_code": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentItemDTO"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentResource": {
+                "title": "Payment Resource",
+                "required": [
+                    "uuid"
+                ],
+                "properties": {
+                    "payment": {
+                        "properties": {
+                            "uuid": {
+                                "description": "The UUID of the payment",
+                                "type": "string",
+                                "format": "uuid"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "JWT": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "security": [
+        {
+            "JWT": []
+        }
+    ]
+}
