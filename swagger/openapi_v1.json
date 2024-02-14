@@ -74,12 +74,34 @@
                         "description": "The session code for the callback payment",
                         "type": "string"
                     },
+                    "customer_email": {
+                        "description": "The email of the customer",
+                        "type": "email"
+                    },
                     "items": {
                         "description": "The items of the payment",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PaymentItemDTO"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentCallbackDTO": {
+                "title": "Payment Callback",
+                "required": [
+                    "sessionSecret",
+                    "provider"
+                ],
+                "properties": {
+                    "sessionSecret": {
+                        "description": "The session secret of the payment",
+                        "type": "string"
+                    },
+                    "provider": {
+                        "description": "The provider of the payment",
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -94,6 +116,14 @@
                     "name": {
                         "description": "The name of the payment item",
                         "type": "string"
+                    },
+                    "description": {
+                        "description": "The description for payment item",
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "description": "Quanity of the payment item",
+                        "type": "integer"
                     },
                     "value": {
                         "description": "The value of the payment item",
@@ -131,11 +161,32 @@
                         "type": "string",
                         "format": "string"
                     },
+                    "customer_email": {
+                        "type": "email",
+                        "format": "string"
+                    },
                     "items": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PaymentItemDTO"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentCallbackRequest": {
+                "title": "Create Payment Request",
+                "properties": {
+                    "sessionSecret": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "provider": {
+                        "type": "string",
+                        "enum": [
+                            "stripe",
+                            "pay-pall"
+                        ]
                     }
                 },
                 "type": "object"

@@ -15,10 +15,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
-
 Route::prefix("v1")->group(function () {
-    Route::prefix('/payments')->group(function () {
-        Route::post('/transaction', [PaymentController::class, 'create']);
-    })->middleware('auth:api');
+    Route::group([
+        'prefix' => 'payments',
+        'as' => 'payments.',
+        ], function () {
+            Route::post('/transaction', [PaymentController::class, 'create'])
+                ->name('transaction.create')
+                ->middleware('auth:api');
+
+            Route::group([
+                'prefix' => 'callback',
+                'as' => 'callback.',
+            ], function () {
+                Route::get('/success', [PaymentController::class, 'success'])->name('success');
+                Route::get('/cancel', [PaymentController::class, 'cancel'])->name('cancel');
+            });
+        });
 });
+
+

@@ -80,6 +80,16 @@ class CreatePaymentDTO extends BaseDTO
 
     /**
      * @OA\Property(
+     *     property="customer_email",
+     *     type="email",
+     *     description="The email of the customer"
+     * )
+     * @var string
+     */
+    public string $customer_email;
+
+    /**
+     * @OA\Property(
      *     property="items",
      *     type="array",
      *     @OA\Items(ref="#/components/schemas/PaymentItemDTO"),
@@ -96,6 +106,7 @@ class CreatePaymentDTO extends BaseDTO
                                 string         $callback_url,
                                 string         $session_code,
                                 string         $provider,
+                                string         $customer_email,
                                 DataCollection $items)
     {
         $this->uuid = $uuid;
@@ -105,5 +116,50 @@ class CreatePaymentDTO extends BaseDTO
         $this->provider = $provider;
         $this->callback_url = $callback_url;
         $this->session_code = $session_code;
+        $this->customer_email = $customer_email;
     }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
+    public function getProvider(): string
+    {
+        return $this->provider;
+    }
+
+    public function getCallbackUrl(): string
+    {
+        return $this->callback_url;
+    }
+
+    public function getSessionCode(): string
+    {
+        return $this->session_code;
+    }
+
+    public function getCustomerEmail(): string
+    {
+        return $this->customer_email;
+    }
+
+    public function getItems(): DataCollection
+    {
+        return $this->items;
+    }
+
+
+
+
 }
