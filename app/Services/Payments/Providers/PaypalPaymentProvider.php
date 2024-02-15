@@ -86,7 +86,7 @@ class PaypalPaymentProvider extends BasePaymentProvider implements IPaymentProvi
                 'description' => $item->getDescription(),
             ];
 
-            $total = $total->plus($item->getValue());
+            $total = $total->plus($item->getValue()->multipliedBy($item->getQuantity()));
         }
 
 

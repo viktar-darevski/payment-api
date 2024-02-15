@@ -30,7 +30,7 @@ class PaymentCallback
 
     public function generateLink(): string
     {
-        return $this->callbackUrl . '?sessionCode=' . urlencode($this->sessionCode);
+        return $this->callbackUrl . '?sessionCode=' . urlencode($this->sessionCode) . '&status=' . urlencode($this->status);
     }
 
 }
