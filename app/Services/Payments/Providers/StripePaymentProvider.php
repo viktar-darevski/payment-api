@@ -47,8 +47,7 @@ class StripePaymentProvider extends BasePaymentProvider implements IPaymentProvi
             throw new PaymentException($e->getMessage());
         }
 
-
-        return new PaymentSession($stripeSession->id, $stripeSession->url, $this->name);
+        return new PaymentSession($stripeSession->id, $stripeSession->url, $this->name, $this->sessionSecret, $this->sessionID );
     }
 
     private function createLineItems(PaymentDataModel $dataModel) : array{
