@@ -25,7 +25,9 @@ class TransactionRepository implements ITransactionRepository
             'user_id' => $user->id,
             ]
         );
-        $transaction->setState(NewState::getDatabaseState());
+
+        // TODO: check
+        $transaction->setState((new NewState)->getDatabaseState());
 
         $items = collect();
         /**

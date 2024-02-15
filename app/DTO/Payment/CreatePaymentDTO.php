@@ -180,6 +180,7 @@ class CreatePaymentDTO extends BaseDTO
             $this->getTitle(),
             $this->getCustomerEmail(),
             $itemCollection,
+            $this->getCurrency(),
         );
     }
 
