@@ -9,7 +9,6 @@ use App\Services\DataModels\PaymentDataItemModel;
 use App\Services\DataModels\PaymentDataModel;
 use Brick\Money\Money;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 
 class PaypalPaymentProvider extends BasePaymentProvider implements IPaymentProvider
@@ -17,18 +16,9 @@ class PaypalPaymentProvider extends BasePaymentProvider implements IPaymentProvi
     public const string PROVIDER_NAME = 'paypal';
     private PayPalHttpClient $paypal;
 
-    private static $accessToken;
     public function __construct(string $sessionSecret, string $sessionID)
     {
-        $key = config('payments.providers.paypal.key');
-        $secret = config('payments.providers.paypal.secret');
-
-
-        if (!$key || !$secret) {
-            throw new PaymentException('PayPal client ID or secret is not set');
-        }
-        $environment = new SandboxEnvironment($key, $secret);
-        $this->paypal = new PayPalHttpClient($environment);
+        $this->paypal = app(PayPalHttpClient::class);
         $this->name = self::PROVIDER_NAME;
 
         parent::__construct($sessionSecret, $sessionID);

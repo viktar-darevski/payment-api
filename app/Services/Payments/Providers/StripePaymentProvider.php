@@ -13,15 +13,8 @@ class StripePaymentProvider extends BasePaymentProvider implements IPaymentProvi
 
     public function __construct(string $sessionSecret, string $sessionID)
     {
-        $secretKey = config('payments.providers.stripe.secret');
+        $this->stripe = app(StripeClient::class);
 
-        if (!$secretKey) {
-            throw new PaymentException('Stripe secret key is not set');
-        }
-
-        $this->stripe = new StripeClient([
-            'api_key' => $secretKey,
-        ]);
         $this->name = self::PROVIDER_NAME;
 
         parent::__construct($sessionSecret, $sessionID);
