@@ -46,7 +46,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             // Make sure that we display JSON responses in API mode
-//            \App\Http\Middleware\ForceJsonResponse::class,
+            \App\Http\Middleware\ForceJsonResponse::class,
         ],
     ];
 
