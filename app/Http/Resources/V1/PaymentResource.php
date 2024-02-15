@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use App\Services\DataModels\PaymentDataModel;
+use App\Services\Payments\Providers\PaymentSession;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,7 +21,7 @@ use JsonSerializable;
 class PaymentResource extends JsonResource
 {
     /**
-     * @var PaymentDataModel
+     * @var PaymentSession
      */
     public $resource;
 
@@ -29,10 +30,10 @@ class PaymentResource extends JsonResource
      *     property="payment",
      *     type="object",
      *     @OA\Property(
-     *         property="uuid",
+     *         property="payment_link",
      *         type="string",
-     *         format="uuid",
-     *         description="The UUID of the payment"
+     *         format="url",
+     *         description="The payment link to the payment system"
      *     )
      * )
      * @var array
@@ -46,7 +47,7 @@ class PaymentResource extends JsonResource
     public function toArray(Request $request): array|JsonSerializable|Arrayable
     {
         return [
-            'uuid' => $this->resource->getUuid(),
+            'payment_link' => $this->resource->getPaymentUrl(),
         ];
     }
 }

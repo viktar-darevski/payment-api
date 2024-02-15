@@ -35,6 +35,30 @@
                     }
                 }
             }
+        },
+        "/api/v1/payments/callback/success": {
+            "post": {
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Callback method for success payment",
+                "operationId": "callbackSuccess",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentCallbackRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "301": {
+                        "description": "Making redirect to client site"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -74,12 +98,38 @@
                         "description": "The session code for the callback payment",
                         "type": "string"
                     },
+                    "customer_email": {
+                        "description": "The email of the customer",
+                        "type": "email"
+                    },
                     "items": {
                         "description": "The items of the payment",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PaymentItemDTO"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentCallbackDTO": {
+                "title": "Payment Callback",
+                "required": [
+                    "sessionSecret",
+                    "provider"
+                ],
+                "properties": {
+                    "sessionSecret": {
+                        "description": "The session secret of the payment",
+                        "type": "string"
+                    },
+                    "sessionID": {
+                        "description": "The session id of the payment",
+                        "type": "string"
+                    },
+                    "provider": {
+                        "description": "The provider of the payment",
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -94,6 +144,14 @@
                     "name": {
                         "description": "The name of the payment item",
                         "type": "string"
+                    },
+                    "description": {
+                        "description": "The description for payment item",
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "description": "Quanity of the payment item",
+                        "type": "integer"
                     },
                     "value": {
                         "description": "The value of the payment item",
@@ -131,11 +189,32 @@
                         "type": "string",
                         "format": "string"
                     },
+                    "customer_email": {
+                        "type": "email",
+                        "format": "string"
+                    },
                     "items": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PaymentItemDTO"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "PaymentCallbackRequest": {
+                "title": "Create Payment Request",
+                "properties": {
+                    "sessionSecret": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "provider": {
+                        "type": "string",
+                        "enum": [
+                            "stripe",
+                            "pay-pall"
+                        ]
                     }
                 },
                 "type": "object"
@@ -148,10 +227,10 @@
                 "properties": {
                     "payment": {
                         "properties": {
-                            "uuid": {
-                                "description": "The UUID of the payment",
+                            "payment_link": {
+                                "description": "The payment link to the payment system",
                                 "type": "string",
-                                "format": "uuid"
+                                "format": "url"
                             }
                         },
                         "type": "object"

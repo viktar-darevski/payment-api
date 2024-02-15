@@ -12,11 +12,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+         \App\Models\TransactionState::factory()->create([
+             'name' => 'New',
+         ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\TransactionState::factory()->create([
+            'name' => 'Processing',
+        ]);
+
+        \App\Models\TransactionState::factory()->create([
+            'name' => 'Completed',
+        ]);
+
+        \App\Models\TransactionState::factory()->create([
+            'name' => 'Failed',
+        ]);
+
+        \App\Models\TransactionState::factory()->create([
+            'name' => 'Cancel',
+        ]);
+
     }
 }
