@@ -12,6 +12,7 @@ use App\Services\Payments\Providers\PaymentCallback;
 use App\Services\Payments\Providers\PaymentSession;
 use App\Services\Transaction\States\CompletedState;
 use App\Services\Transaction\States\NewState;
+use App\Services\Transaction\States\ProcessingState;
 use Illuminate\Support\Facades\Hash;
 
 class TransactionService implements ITransactionService
@@ -30,14 +31,18 @@ class TransactionService implements ITransactionService
     public function createPayment(CreatePaymentDTO $data, User $user) : PaymentSession
     {
         $transaction = $this->transactionRepository->create($data, $user);
-        $transaction->changeState(NewState::class);
+        // just showing that we can set NewState throw the StateMachine
+        $transaction->changeState(new NewState());
+
         $dataModel = $data->makeDataModel();
         $paymentSession = $this->paymentService->createPayment($dataModel, $data->getProvider());
 
         $transaction->provider_secret_code = $paymentSession->getPaymentSecret();
         $transaction->provider_session_id = $paymentSession->getPaymentID();
         $transaction->save();
-        $transaction->processState();
+
+        // TODO: add caching transit exception
+        TransactionState::transit($transaction, new ProcessingState());
 
         return $paymentSession;
     }
@@ -56,7 +61,8 @@ class TransactionService implements ITransactionService
             throw new \Exception('Invalid session secret');
         }
 
-        $transaction->processState();
+        // TODO: add caching transit exception
+        TransactionState::transit($transaction, new CompletedState());
 
         return new PaymentCallback($transaction->callback_url, $transaction->session_code, 'success' );
     }

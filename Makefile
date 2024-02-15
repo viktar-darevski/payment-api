@@ -29,3 +29,8 @@ generate-openapi: generate-openapi-v1
 .PHONY: docker-composer-install
 docker-composer-install:
 	docker run --rm --interactive --tty -v ./:/app composer install
+
+
+.PHHONE: passport-install
+passport-install:
+	./vendor/bin/sail php artisan passport:install

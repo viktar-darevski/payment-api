@@ -44,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PayPalHttpClient::class, function ($app) {
             $key = config('payments.providers.paypal.key');
             $secret = config('payments.providers.paypal.secret');
-
             if (!$key || !$secret) {
                 throw new PaymentException('PayPal client ID or secret is not set');
             }

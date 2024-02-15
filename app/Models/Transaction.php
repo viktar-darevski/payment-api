@@ -12,6 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @property-read int id
+ * @property string provider_secret_code
+ * @property string provider_session_id
+ * @property string callback_url
+ * @property string session_code
+ *
+ */
 class Transaction extends Model
 {
     use HasFactory;
@@ -50,12 +58,6 @@ class Transaction extends Model
     {
         return $this->belongsTo(TransactionState::class);
     }
-
-    public function setState(TransactionState $state)
-    {
-        $this->state()->associate($state);
-    }
-
 
     /**
      * Retrieving the Items from JSON
@@ -109,24 +111,36 @@ class Transaction extends Model
     }
 
 
-    public function changeState(string $stateClass)
+    /**
+     * Directly update database transaction state in ORM
+     * @param TransactionState $state
+     * @return void
+     */
+    public function setState(TransactionState $state)
     {
-        $databaseState = $stateClass::getDatabaseState();
-        $this->state()->associate($databaseState);
+        $this->state()->associate($state);
+    }
+
+
+    public function changeState(ITransactionState $state)
+    {
+        // set the state in the database
+        $this->setState($state->getDatabaseState());
         $this->save();
+
+        $state->process($this);
     }
 
 
     /**
      * @return void
      */
-    public function processState(): void
+    public function getCurrentState(): ITransactionState
     {
         $state = $this->state;
         $stateClass = "App\\Services\\Transaction\\States\\" . $state->name . "State";
         /** @var ITransactionState $stateObject */
-        $stateObject = app($stateClass, ['transaction' => $this]);
-        $stateObject->proceed();
+        return app($stateClass, ['transaction' => $this]);
     }
 
 }
