@@ -12,7 +12,8 @@ class PaymentDataModel extends BaseDataModel
         private readonly string $title,
         private readonly string $customer_email,
         #[DataCollectionOf(PaymentDataItemModel::class)]
-        private readonly DataCollection $items
+        private readonly DataCollection $items,
+        private readonly string $currency,
     ) {
 
     }
@@ -31,4 +32,10 @@ class PaymentDataModel extends BaseDataModel
     {
         return $this->items;
     }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('currency');
             $table->json('items');
             $table->bigInteger('total');
-            $table->enum('provider', ['stripe', 'pay-pall']);
+            $table->enum('provider', ['stripe', 'paypal']);
             $table->string('provider_secret_code')->nullable();
             $table->string('provider_session_id')->nullable();
             $table->foreignId('user_id')->constrained('users');
