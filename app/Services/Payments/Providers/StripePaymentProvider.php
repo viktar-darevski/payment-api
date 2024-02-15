@@ -4,7 +4,6 @@ namespace App\Services\Payments\Providers;
 
 use App\Services\DataModels\PaymentDataItemModel;
 use App\Services\DataModels\PaymentDataModel;
-use Stripe\Stripe;
 use Stripe\StripeClient;
 
 class StripePaymentProvider extends BasePaymentProvider implements IPaymentProvider
@@ -12,7 +11,7 @@ class StripePaymentProvider extends BasePaymentProvider implements IPaymentProvi
     public const string PROVIDER_NAME = 'stripe';
     private StripeClient $stripe;
 
-    public function __construct($sessionSecret)
+    public function __construct(string $sessionSecret, string $sessionID)
     {
         $secretKey = config('payments.providers.stripe.secret');
 
@@ -25,7 +24,7 @@ class StripePaymentProvider extends BasePaymentProvider implements IPaymentProvi
         ]);
         $this->name = self::PROVIDER_NAME;
 
-        parent::__construct($sessionSecret);
+        parent::__construct($sessionSecret, $sessionID);
     }
 
 

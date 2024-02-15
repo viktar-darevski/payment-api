@@ -8,11 +8,11 @@ abstract class BasePaymentProvider implements IPaymentProvider
 {
     protected string|null $successUrl;
     protected string|null $cancelUrl;
-    protected string|null $failedUrl;
     protected string|null $locale = 'en';
-
     protected string $name;
 
+    protected string $sessionSecret;
+    protected string $sessionID;
 
     public function name(): string {
         return $this->name;
@@ -44,14 +44,27 @@ abstract class BasePaymentProvider implements IPaymentProvider
     }
 
 
-    public function __construct($sessionSecret){
+    public function __construct(string $sessionSecret, string $sessionID){
+        $this->sessionID = $sessionID;
+        $this->sessionSecret = $sessionSecret;
+
         $this->setSuccessUrl(
-            route('payments.callback.success', ['sessionSecret' => $sessionSecret , 'provider' => $this->name()])
+            route('payments.callback.success', [
+                'sessionSecret' => $sessionSecret ,
+                'sessionID' => $this->sessionID,
+                'provider' => $this->name(),
+            ])
         );
 
         $this->setCancelUrl(
-            route('payments.callback.cancel', ['sessionSecret' => $sessionSecret , 'provider' => $this->name()])
+            route('payments.callback.cancel', [
+                'sessionSecret' => $sessionSecret ,
+                'sessionID' => $this->sessionID,
+                'provider' => $this->name()
+            ])
         );
+
+
     }
 
 }

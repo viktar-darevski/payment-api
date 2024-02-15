@@ -29,6 +29,16 @@ class PaymentCallbackDTO extends BaseDTO
     #[StringType]
     public string $sessionSecret;
 
+    /**
+     * @OA\Property(
+     *     property="sessionID",
+     *     type="string",
+     *     description="The session id of the payment",
+     * )
+     * @var string
+     */
+    #[StringType]
+    public string $sessionID;
 
     /**
      * @OA\Property(
@@ -42,10 +52,11 @@ class PaymentCallbackDTO extends BaseDTO
     public string $provider;
 
 
-    public function __construct(string $sessionSecret, string $provider)
+    public function __construct(string $sessionSecret, string $provider, string $sessionID)
     {
         $this->sessionSecret = $sessionSecret;
         $this->provider = $provider;
+        $this->sessionID = $sessionID;
     }
 
     public function getSessionSecret(): string
@@ -57,5 +68,12 @@ class PaymentCallbackDTO extends BaseDTO
     {
         return $this->provider;
     }
+
+    public function getSessionID(): string
+    {
+        return $this->sessionID;
+    }
+
+
 
 }

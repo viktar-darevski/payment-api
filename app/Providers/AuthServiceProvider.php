@@ -23,8 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Passport::tokensCan([
-            'place-orders' => 'Place orders',
-            'check-status' => 'Check order status',
+            'process-payment' => 'Run payment process',
+            'check-payments' => 'Check payments status',
         ]);
     }
 }

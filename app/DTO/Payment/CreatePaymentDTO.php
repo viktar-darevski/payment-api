@@ -3,6 +3,8 @@
 namespace App\DTO\Payment;
 
 use App\DTO\BaseDTO;
+use App\Services\DataModels\PaymentDataItemModel;
+use App\Services\DataModels\PaymentDataModel;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\DataCollection;
 
@@ -159,7 +161,26 @@ class CreatePaymentDTO extends BaseDTO
         return $this->items;
     }
 
+    public function makeDataModel(): PaymentDataModel
+    {
+        $paymentItems = array_map(function($item) {
+            /**
+             * @var $item PaymentItemDTO
+             */
+            return new PaymentDataItemModel(
+                $item->getName(),
+                $item->getDescription(),
+                $item->getQuantity(),
+                $item->getValue()
+            );
+        }, $this->getItems()->items());
+        $itemCollection = new DataCollection(PaymentDataItemModel::class, $paymentItems);
 
-
+        return new PaymentDataModel(
+            $this->getTitle(),
+            $this->getCustomerEmail(),
+            $itemCollection,
+        );
+    }
 
 }

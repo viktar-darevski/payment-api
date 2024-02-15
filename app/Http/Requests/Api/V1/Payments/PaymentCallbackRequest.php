@@ -37,6 +37,7 @@ class PaymentCallbackRequest extends BaseRequest
     {
         return [
             'sessionSecret' => 'required|string',
+            'sessionID' => 'required|string',
             'provider' => ['required', app(PaymentProviderRule::class)]
         ];
     }
@@ -51,6 +52,7 @@ class PaymentCallbackRequest extends BaseRequest
     public function makeDTO() : PaymentCallbackDTO {
         $sessionSecret = $this->input('sessionSecret');
         $provider = $this->input('provider');
-        return new PaymentCallbackDTO($sessionSecret, $provider);
+        $sessionID = $this->input('sessionID');
+        return new PaymentCallbackDTO($sessionSecret, $provider, $sessionID);
     }
 }

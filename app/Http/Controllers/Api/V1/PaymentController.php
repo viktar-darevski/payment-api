@@ -1,15 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api\V1;
 
-use App\Contracts\Services\IPaymentsService;
-use App\DTO\Payment\PaymentItemDTO;
+use App\Contracts\Services\ITransactionService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Payments\CreatePaymentRequest;
 use App\Http\Requests\Api\V1\Payments\PaymentCallbackRequest;
 use App\Http\Resources\V1\PaymentResource;
-use App\Services\DataModels\PaymentDataItemModel;
-use App\Services\DataModels\PaymentDataModel;
-use Spatie\LaravelData\DataCollection;
 
 /**
  * @OA\Info(
@@ -49,47 +45,45 @@ class PaymentController extends Controller
      *       ),
      * )
      */
-    public function create(CreatePaymentRequest $request, IPaymentsService $service)
+    public function create(CreatePaymentRequest $request, ITransactionService $service)
     {
         $dto = $request->makeDTO();
-
-        $paymentItems = array_map(function($item) {
-            /**
-             * @var $item PaymentItemDTO
-             */
-            return new PaymentDataItemModel(
-                $item->getName(),
-                $item->getDescription(),
-                $item->getQuantity(),
-                $item->getValue()
-            );
-        }, $dto->getItems()->items());
-
-
-        $itemCollection = new DataCollection(PaymentDataItemModel::class, $paymentItems);
-
         $paymentSession = $service->createPayment(
-            new PaymentDataModel(
-                $dto->getTitle(),
-                $dto->getCustomerEmail(),
-                $itemCollection,
-            ), $dto->getProvider(),
+            $dto, \Auth::user()
         );
 
-        dd($paymentSession);
-
-        return new PaymentResource($data);
+        return new PaymentResource($paymentSession);
     }
 
 
-    public function success(PaymentCallbackRequest $request, IPaymentsService $service)
+
+    /**
+     * @OA\Post(
+     *       path="/api/v1/payments/callback/success",
+     *       summary="Callback method for success payment",
+     *       operationId="callbackSuccess",
+     *       tags={"payments"},
+     *       @OA\RequestBody(
+     *           required=true,
+     *           @OA\JsonContent(ref="#/components/schemas/PaymentCallbackRequest")
+     *       ),
+     *       @OA\Response(
+     *           response=301,
+     *           description="Making redirect to client site",
+     *       ),
+     * )
+     */
+    public function success(PaymentCallbackRequest $request, ITransactionService $service)
     {
-        dd($request->makeDTO());
+        $dto = $request->makeDTO();
+        $paymentCallback = $service->processedPayment($dto);
+        return redirect($paymentCallback->generateLink());
     }
 
 
-    public function cancel(PaymentCallbackRequest $request, IPaymentsService $service)
+    public function cancel(PaymentCallbackRequest $request, ITransactionService $service)
     {
+        // TODO: implement cancel functionality
         dd($request->makeDTO());
     }
 }

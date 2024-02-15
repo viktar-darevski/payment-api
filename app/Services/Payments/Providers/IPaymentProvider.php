@@ -10,5 +10,6 @@ interface IPaymentProvider
 
     public function createPaymentSession(PaymentDataModel $dataModel): PaymentSession;
 
-    public function __construct($sessionSecret);
+
+    public function __construct(string $sessionSecret, string $sessionID);
 }

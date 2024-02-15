@@ -2,7 +2,6 @@
 
 namespace App\Contracts\Services;
 
-use App\Models\User;
 use App\Services\DataModels\PaymentDataModel;
 use App\Services\Payments\Providers\PaymentSession;
 

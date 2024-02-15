@@ -9,6 +9,7 @@ class PaymentSession
         private readonly string $paymentUrl,
         private readonly string $provider,
         private string $paymentSecret = "",
+        private string $paymentID = "",
     )
     {
     }
@@ -37,5 +38,17 @@ class PaymentSession
     {
         $this->paymentSecret = $paymentSecret;
     }
+
+    public function getPaymentID(): string
+    {
+        return $this->paymentID;
+    }
+
+    public function setPaymentID(string $paymentID): void
+    {
+        $this->paymentID = $paymentID;
+    }
+
+
 
 }
